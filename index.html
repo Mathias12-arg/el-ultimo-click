@@ -3,379 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Sos mi victoria, y sos mi fracaso  </title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            background-color: #07080a;
-            color: #c5a880;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-            padding: 20px;
-            position: relative;
-        }
-
-        /* Estilo DARK: Líneas de escaneo de monitor antiguo */
-        body::before {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-            z-index: 2000;
-            background-size: 100% 3px, 6px 100%;
-            pointer-events: none;
-        }
-
-        /* Estilo DARK: Efecto Viñeta */
-        .vignette {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: radial-gradient(circle, transparent 40%, #030405 95%);
-            z-index: 1500;
-            pointer-events: none;
-        }
-        
-        /* Fotos de fondo */
-        .background-photo {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background-image: url('foto_juntos.jpg');
-            background-size: cover;
-            background-position: center;
-            filter: grayscale(100%) contrast(120%);
-            opacity: 0.03;
-            z-index: -1;
-        }
-
-        /* Sistema de Modales */
-        .modal {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #050508;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1800;
-            opacity: 1;
-            transition: opacity 0.8s ease;
-        }
-        .modal-content {
-            background-color: #0b0d13;
-            border: 1px solid #c5a880;
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.9);
-            position: relative;
-        }
-        .modal h2 {
-            font-size: 1.15rem;
-            margin-bottom: 20px;
-            letter-spacing: 3px;
-            color: #e5c59e;
-            text-shadow: 0 0 8px rgba(229, 197, 158, 0.3);
-        }
-        .modal p {
-            font-size: 0.85rem;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            color: #8fa0b5;
-        }
-        .btn-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-        button {
-            background: transparent;
-            border: 1px solid #c5a880;
-            color: #c5a880;
-            padding: 10px 25px;
-            font-family: inherit;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-        }
-        button:hover {
-            background-color: #c5a880;
-            color: #0b0c10;
-            box-shadow: 0 0 12px rgba(197, 168, 128, 0.5);
-        }
-        .btn-exit {
-            border-color: #333;
-            color: #555;
-        }
-        .btn-exit:hover {
-            background-color: #111;
-            color: #fff;
-            border-color: #555;
-            box-shadow: none;
-        }
-
-        /* Bloque Central de Lectura */
-        .container {
-            max-width: 680px;
-            width: 100%;
-            margin: 40px auto;
-            display: none;
-            opacity: 0;
-            transition: opacity 1.5s ease;
-            position: relative;
-            z-index: 10;
-        }
-        .audio-box {
-            margin-bottom: 40px;
-            text-align: center;
-            border-bottom: 1px dashed #222;
-            padding-bottom: 20px;
-        }
-        .audio-box p {
-            font-size: 0.7rem;
-            margin-bottom: 12px;
-            letter-spacing: 2px;
-            color: #444;
-        }
-        audio {
-            width: 100%;
-            max-width: 280px;
-            opacity: 0.4;
-            transition: opacity 0.5s;
-        }
-        audio:hover { opacity: 0.9; }
-
-        .carta-texto {
-            font-size: 1.05rem;
-            line-height: 1.9;
-            white-space: pre-wrap;
-            text-align: justify;
-            color: #cbd3dc;
-            text-shadow: 0 0 1px rgba(255,255,255,0.1);
-        }
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 18px;
-            background-color: #c5a880;
-            margin-left: 2px;
-            animation: blink 0.8s infinite;
-            vertical-align: middle;
-        }
-
-        /* PANTALLA TERMINAL RETRO */
-        #terminalScreen {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #030405;
-            z-index: 3000;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #ff4d4d;
-            font-family: 'Courier New', Courier, monospace;
-            padding: 20px;
-            text-align: left;
-        }
-        .terminal-box {
-            white-space: pre;
-            font-size: 0.55rem;
-            line-height: 1.1;
-            margin-bottom: 25px;
-            transition: color 0.3s;
-        }
-        .terminal-msg {
-            font-size: 0.95rem;
-            letter-spacing: 1px;
-            text-align: center;
-            min-height: 24px;
-            color: #ff4d4d;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-    </style>
+    <title>Solicitud de Entrada</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
-
+    <!-- Capa de Fotografía Dinámica de fondo -->
+    <div id="bgImage" class="bg-image"></div>
+    
+    <!-- Lienzo para el corazón interactivo -->
+    <canvas id="mapCanvas"></canvas>
+    
+    <!-- Filtro oscuro estilo Dark -->
     <div class="vignette"></div>
-    <div class="background-photo"></div>
 
-    <div id="modal1" class="modal">
-        <div class="modal-content">
-            <h2>AVISO DE ENTRADA</h2>
-            <p>Estabas bien, al menos eso es lo que pensabas... ¿Verdad?</p>
-            <div class="btn-container">
-                <button class="btn-exit" onclick="salir()">Salir</button>
-                <button onclick="siguienteModal()">Continuar</button>
-            </div>
-        </div>
+    <!-- UI: Capa de Fecha / Línea de Tiempo -->
+    <div id="dateMarker" class="date-marker hidden"></div>
+
+  <!-- Filtro oscuro estilo Dark -->
+    <div class="vignette"></div>
+
+    <!-- NUEVO: Contenedor para "Está escribiendo..." -->
+    <div id="typingContainer" class="typing-container"></div>
+
+    <!-- Galería de Recuerdos (Imágenes centradas y pequeñas) -->
+    <div id="memoryGallery" class="memory-gallery"></div>
+    <!-- NUEVO: Galería de Recuerdos (Imágenes centradas y pequeñas) -->
+    <div id="memoryGallery" class="memory-gallery"></div>
+
+    <!-- UI: Capa de Fecha / Línea de Tiempo -->
+    <div id="dateMarker" class="date-marker hidden"></div>
+
+    <!-- UI: Capa Narrativa -->
+    <div id="narrativeUI" class="narrative-container hidden">
+        <p id="narrativeText" class="narrative-text"></p>
+    </div>
+    <!-- UI: Capa Narrativa -->
+    <div id="narrativeUI" class="narrative-container hidden">
+        <p id="narrativeText" class="narrative-text"></p>
     </div>
 
-    <div id="modal2" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h2>"Recuerda que aun la quieres por si te olvidabas"</h2>
-            <p>"Adicto a pensarte aunque ya sea insano"</p>
-            <div class="btn-container">
-                <button class="btn-exit" onclick="salir()">Salir</button>
-                <button onclick="entrarALaBoveda()">Te extraño...</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="mainContent" class="container">
-        <div class="audio-box">
-            <p>[ PRESIONA PLAY ]</p>
-            <audio controls src="narracion.mp3"></audio>
-        </div>
-        <div class="carta-texto" id="textoCarta"></div><span id="cursorBlink" class="cursor"></span>
-    </div>
-
-    <div id="modalFinal" class="modal" style="display: none; background-color: rgba(5, 5, 8, 0.97);">
-        <div class="modal-content" style="border-color: #e5c59e; max-width: 450px;">
-            <h2 id="tituloFinal">¿DONDE QUEDO LA MUJER QUE CONOCI HACE UN AÑO?</h2>
-            <p id="descFinal">Se me hace dificil pensar que ya no me extrañas...</p>
-            <div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;">
-                <button onclick="aceptarPropuesta()">SÍ</button>
-                <button id="btnNo" onclick="intentarNo()">NO</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="terminalScreen">
-        <div class="terminal-msg" id="terminalMsg1"></div>
-        <div class="terminal-msg" id="terminalMsg2" style="color: #ff80df; margin-top: 10px;"></div>
-    </div>
-
-    <script>
-        const textoCompleto = "\nHan transcurrido 223 días desde el 19 de enero de 2026 hasta hoy, 30 de agosto de 2026. Que no te haya felicitado personalmente no significa que haya olvidado tu cumpleaños. Desde hace meses vengo recordando diariamente la fecha de nacimiento de la persona que marcó tanto mi vida. Quizás ni siquiera recuerdas que esta página existe, ni veas este apartado, pero yo sí recordé en todo momento este día especial para ti... ¿Y cómo no hacerlo? Si un día antes exactamente hace un año fue el momento más feliz de mi vida, donde me dijiste que yo también era lo mejor que te había pasado en la vida y que también me amabas. Pero bueno... Feliz cumpleaños, Ahiziri.\n\nResubido el 21/7/2026. Realmente me gusto hacer este proyecto y no merece desperdiciarse a pesar de que ya cumplio su proposito... Y quizas, soy adicto a un dolor que me inspira si no me mata. \n\nEs curioso que solo me bastó con verte una única vez por esa cámara para guardar en mi retina cada detalle de tu rostro, tus facciones, tu sonrisa. No necesité años, meses, ni semanas para darme cuenta y sentir que contigo la conexión fue diferente a cualquier otra. Solo hicieron falta un par de días donde ninguno quería cortar esa llamada hasta trasnochar, el buenos días diario, las buenas noches y los “te quiero”, “te extraño” espontáneos cada vez que hablaba contigo.\n\nNo recuerdo cuándo fue el momento exacto en donde los “Te quiero” empezaron a salir de mis labios de forma natural, donde quería saber de ti a cada minuto, dónde irme a la cama después de todo el día escuchando tu voz significaba una espera agónica pero resistible porque sabía que al día siguiente volvería a verte. Es sorprendente cómo cambiaste drásticamente todo en mí en cuestión de días; para alguien cerrado y orgulloso, te convertiste en el centro de mi universo, tanto que sentía necesitar recordártelo cada vez que fuera posible. Llegaste a mi vida cuando estaba a gusto con mi soledad y no necesitaba a nadie, no quería a nadie… y te fuiste cuando lo quería todo contigo.\n\nMe acuerdo perfectamente del día en que te confesé mis sentimientos. Puedo afirmar, sin temor a equivocarme, que fue uno de los mejores días de mi vida. Todo fue tan espontáneo que a mi mente le costaba aceptar que sentías exactamente lo mismo por mí, que la conexión era una verdad innegable. Incluso me acuerdo de cómo tuve que explicarte aquel reel que te compartí, cuando las palabras me quedaron chicas para expresar el tamaño de lo que me pasaba por dentro. Aquel reel de la contra de Cuevas tras el tiro libre de Racing; no lo entendías en su momento, pero quería decirte que el instante exacto después de mi declaración fue más hermoso que ese gol de Cuevas, que el penal de Montiel en diciembre de 2022, que el gol de Messi a México en 2007 o cualquier otro momento alegre en mi vida. Sin duda alguna, fuiste, eres y serás el mejor Puskás de mi vida.\n\n¿Te acuerdas de que una vez te hablé sobre la chica de la cara borrosa que aparecía en mis sueños? Hoy, con la distancia de los meses, no dejo de respaldar que tú fuiste y serás aquella mujer, la dueña de la silueta que mi mente ya buscaba antes de conocerte. No voy a minimizar el hecho de que haya sido una relación virtual, ni que la distancia a más de 4 mil kilómetros era un desafío complejo, una locura para el sentido común. Después de todo, ¿¡Quién dicta qué clase de amor vale más o menos!? ¿¡Quién mide la legitimidad de un sentimiento por los centímetros de cercanía!? A pesar de verte solo a través de una pantalla, yo no necesitaba tocarte para saber que eras la indicada.\n\nEl voltaje estaba ahí, intacto. Vivíamos bajo nuestra propia ley de Ohm. Si la distancia operaba como una resistencia (R) brutal, la intensidad (I) de nuestra corriente no disminuía; se multiplicaba con cada kilómetro. En nuestra ecuación (V = I x R), el voltaje (V) de nuestro potencial emocional crecía de forma directamente proporcional a esa resistencia. La física dicta que la distancia debió frenar el flujo, pero nuestro circuito demostró que a mayor resistencia, la intensidad de la conexión solo aumentaba para mantener el sistema vivo.\n\n\n\n\n¿Realmente hemos cambiado tanto en estos meses? Sería muy fácil decir que sí, que el cansancio y el estrés del trabajo me han vuelto más duro, más callado, un hombre fuerte. Pero la verdad es que sigo siendo aquel joven enamorado que juraba que haberte conocido era lo mejor que le había pasado en la vida; lo sigo siendo, al menos por dentro. Aún mantengo ese dicho, porque a pesar de todo, contigo gané y fui muy afortunado al haber tenido la suerte de conocerte. Te he escrito toda una canción para volverte a ver y he discutido con mi corazón para que te olvide. Te estaría mintiendo si dijera que no cruzas por mi mente al menos una vez al día, a veces más, pero nunca menos.\n\nA veces me pregunto qué es de tu vida, si estarás cumpliendo tus metas, si piensas en mí. Tengo miedo de olvidar tu voz, aunque también tengo miedo de que permanezca en mi cabeza para siempre. Es contradictorio, ¿verdad? Extrañar un audio tuyo con tono tierno y al mismo tiempo temer lo que podría causar en mí, de escucharte decir mi nombre una vez más con ese tono tuyo tan característico que nunca pude olvidar… y que te conviertas en el centro de mi universo una vez más. Extraño tu risa, tu voz, tus chistes que rara vez entendía; extraño ser esa pareja completamente dispareja e imperfecta para el ojo del mundo, pero perfecta para nuestro amor rotundo. Como te dije y tuve que explicarte en su momento: Mi vida antes de ti era simplemente escalar, una sucesión de subidas verticales y esfuerzos ciegos; hasta que me topé contigo y la transformaste en un vector, porque a partir de ese instante tuvo una dirección, tuvo un sentido.\n\nMe gustaría decirte que mi vida va bien, que estoy conociendo gente nueva, que a pesar del amor que aún te tengo todo comienza a ser más fácil. Otra mentira; realmente mi vida solo tomó el rumbo que necesitaba, mas no el que me hubiera gustado, un rumbo donde aún pudiera saber de ti, un rumbo donde no tuviera que cargar con el peso de la intensa y única conexión que tuvimos, donde no sintiera cómo se me anuda el corazón ante cada recuerdo tuyo, aunque esos recuerdos hayan sido mis únicas sonrisas. Le hablé a mamá de ti. No te voy a mentir, aún me tiembla la voz cuando escucho algo que me recuerda a vos, me duele cuando alguien pronuncia tu nombre sin saber lo que significaste para mí. Ella se sorprendió al escucharme hablar de ti con tanta devoción; estoy seguro de que ambas se hubieran entendido muy bien. Quería que supieras eso: que siempre fuiste importante más allá de los kilómetros, al punto de confiarle tu existencia a la mujer más importante de mi vida.\n\nYa perdí la cuenta de las veces en que tuve uno de esos días donde habría tenido tanto para contarte. Es difícil… Acepté que no voy a olvidarte, eso sería traicionar el amor que una vez tuvimos. Superar, suena más fácil aceptarlo que hacerlo, pero ¿cómo superas a alguien que se volvió parte de tu rutina?, ¿la única constante en un mundo lleno de variables?, ¿la única persona con quien no me asustaba intentarlo todo? El tiempo no borra nada; esa es la gran mentira que te venden los de afuera. El tiempo solo empuja las cosas al fondo del pozo, mientras aprendes a seguir funcionando en automático. Mis días se acostumbraron a cargar el peso de tu recuerdo en absoluto silencio. Después de todo, no existen cursos ni manuales para aprender a soltar lo que se te quedó grabado en los huesos.\n\n\n\nA veces pienso en cómo serían las cosas si todo hubiera terminado diferente, estoy seguro de que te encantaría conocer a la nueva versión de mí… En verdad te habría encantado, pero tuve que perderte para cambiar y estar donde necesito estar. Quizás ya sea tarde para hablar de nada, y solo soy un pobre tonto que no lo supera, viviendo con la carga de saber que te lastimó y te alejó con sus propias acciones en el peor momento.\n\nMe hubiera gustado entregarte este espacio en tu cumpleaños, como una felicitación limpia, pero sería de muy hijo de puta usar un día importante para ti como una excusa egoísta para obligarte a hablarme una vez más. Asumí que lo mejor sería un día cualquiera, desmarcado de las fechas del calendario. Un día con el corazón en la mano, un día donde el corazón ya no da más por la presión, un día donde solo decidí dejar que hable el corazón.\n\nEstoy cansado de que todos me repitan que el 'evento canónico' de todo hombre es aprender a soltar a la mujer que más amó. ¿¡Por qué carajos debería seguir las reglas impuestas por el fracaso de los demás!? Yo no quiero renunciar tan fácilmente a lo nuestro, al amor de mi vida.\n\nPodría ser inmaduro y dependiente, decirte que te espero porque me falta el aire, u orgulloso y decir que te solté y ya no me importas. Pero hay que ser honestos si esta será la última carta dirigida a ti. Nunca se trató de orgullo, porque renuncié a él desde el momento en que empecé a redactar estas líneas, tampoco de autoengaño o de una dependencia emocional porque, a pesar de que mi vida se sintiera vacía desde que te fuiste… Te amo tanto que mi amor no necesita poseerte, ni condicionar mi futuro, ni exigir que estés acá para seguir existiendo.\n\nIndependientemente de lo que pienses y que seguramente nuestros caminos ya no vuelvan a reunirse en la misma sintonía, seré ese amigo que a la lejanía pedirá siempre por tu bien, porque entendí que eres un tesoro que no puedo poseer.\n\nMe enseñaste cómo se debe amar: apasionadamente y sin temor a las consecuencias. Y hoy comprendo que el riesgo valió completamente la pena. Con vos gané, y esa certeza no la va a modificar el tiempo, ni los errores, ni la distancia. No busco que reconozcas mi cambio, ni pretendo volver a la misma relación de hace meses; sé que ambos cambiamos y que la compatibilidad de antes hoy es una incógnita. Solo quiero que me conozcas otra vez, al igual que yo quiero conocerte a ti en esta nueva etapa. Ver si todavía queda una chispa de esa conexión que nos hizo estar juntos. No como amigos, no menos que eso.\n\nDejé de contar los días, semanas, meses desde la última vez que fuimos un equipo. No te veo, no te hablo, no te llamo, no te escribo… pero Dios, cómo te pienso. \n\nAquella tarde todo lo que quería era pedirte que te quedaras, convencerte de que aunque la relación no fue proporcional a la intensa conexión que tuvimos, aún podíamos hacer mejor las cosas… Pero ¿con qué derecho iba a pedirte eso? Si me aferraba a ti por decir quererte, entonces el mayor acto de amor que podía ofrecer era dejarte ir…\n\nTe estaría mintiendo si no admitiera que tal vez sea verdad que no puedo vivir sin ti, y que dos siempre van a ser mejor que uno...\n\nCarajo... Realmente quería pedirte que te quedaras.\n\n\n\n\n\n\n\n\n... Espera.\n";
-        let index = 0;
-        let intentosNo = 0;
-        const maxIntentosNo = 3;
-
-        function salir() {
-            window.location.href = "https://www.google.com";
-        }
-
-        function siguienteModal() {
-            document.getElementById('modal1').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('modal1').style.display = 'none';
-                const m2 = document.getElementById('modal2');
-                m2.style.display = 'flex';
-            }, 800);
-        }
-
-        function entrarALaBoveda() {
-            document.getElementById('modal2').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('modal2').style.display = 'none';
-                const main = document.getElementById('mainContent');
-                main.style.display = 'block';
-                setTimeout(() => {
-                    main.style.opacity = '1';
-                    iniciarTypewriter();
-                }, 100);
-            }, 800);
-        }
-
-       function iniciarTypewriter() {
-            const contenedor = document.getElementById('textoCarta');
-            function escribir() {
-                if (index < textoCompleto.length) {
-                    contenedor.innerHTML += textoCompleto.charAt(index);
-                    index++;
-                    
-                    // CONFIGURACIÓN REAL AJUSTADA
-                    let pausa = 50; 
-                    if (textoCompleto.charAt(index-1) === '.') pausa = 150;
-                    else if (textoCompleto.charAt(index-1) === ',') pausa = 80;
-                    else if (textoCompleto.charAt(index-1) === ';') pausa = 80;
-                    else if (textoCompleto.charAt(index-1) === '\n') pausa = 100;
-                    
-                    setTimeout(escribir, pausa);
-                } else {
-                    document.getElementById('cursorBlink').style.display = 'none';
-                    setTimeout(mostrarModalFinal, 10000);
-                }
-            }
-            escribir();
-        }
-
-        function mostrarModalFinal() {
-            const mf = document.getElementById('modalFinal');
-            mf.style.display = 'flex';
-            setTimeout(() => { mf.style.opacity = '1'; }, 50);
-        }
-
-        function intentarNo() {
-            intentosNo++;
-            const btnNo = document.getElementById('btnNo');
-            const desc = document.getElementById('descFinal');
+    <!-- UI: Primer Click (Estilo RPG - Genshin) -->
+    <div id="introUI" class="ui-container hidden">
+        <div class="gs-request-box">
+            <div id="gsProgressBar" class="gs-progress"></div>
             
-            if (intentosNo === 1) {
-                desc.innerHTML = "Esa opción está deshabilitada... Intentá de nuevo.";
-                btnNo.style.transform = "scale(0.9)";
-            } else if (intentosNo === 2) {
-                desc.innerHTML = "De verdad... no vine hasta acá para que apretes ese botón tan fácil.";
-                btnNo.style.transform = "scale(0.85)";
-            } else if (intentosNo === 3) {
-                desc.innerHTML = "Está bien";
-                btnNo.innerHTML = "CERRAR";
-                btnNo.style.borderColor = "#555";
-                btnNo.style.color = "#777";
-            } else {
-                document.getElementById('modalFinal').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('modalFinal').style.display = 'none';
-                    alert("¿Y si el amor no es para siempre por que siempre vivo pensando en vos?");
-                }, 800);
-            }
-        }
+            <div class="gs-content">
+                <div class="gs-avatar">
+                    <img src="avatar.png" alt="Mataz Avatar"> 
+                </div>
+                <div class="gs-info">
+                    <div class="gs-title">
+                        Solicitud para entrar al Mundo (<span id="gsTimerText">10</span>s)
+                    </div>
+                    <div class="gs-player">
+                        <svg class="gs-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        Mataz
+                    </div>
+                </div>
+                <button id="btnAcceptIntro" class="gs-btn">Y</button>
+            </div>
+        </div>
+    </div>
 
-        function aceptarPropuesta() {
-            // Oculta el modal de inmediato y despliega la consola retro
-            document.getElementById('modalFinal').style.display = 'none';
-            const term = document.getElementById('terminalScreen');
-            term.style.display = 'flex';
+    <!-- UI: Segundo Click (Final - Espejo de la solicitud) -->
+    <div id="outroUI" class="ui-container hidden">
+        <div class="gs-request-box final-request-box">
+            <div class="gs-content final-content">
+                <div class="gs-avatar final-avatar">
+                    <img src="https://i.imgur.com/sC4xV3o.png" alt="Matias Avatar"> 
+                </div>
+                <div class="gs-info final-info">
+                    <div id="finalMsg" class="final-msg-text">¿Estás?</div>
+                    <div class="gs-player final-player">
+                        <svg class="gs-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        Matias • Argentina — Costa Rica (+5.700 km)
+                    </div>
+                </div>
+                <div id="finalButtons" class="dual-btn hidden">
+                    <button id="btnAcceptOutro" class="gs-btn btn-yes">SÍ</button>
+                    <button id="btnCloseOutro" class="gs-btn btn-no">NO</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            setTimeout(() => {
-                escribirMsgTerminal("Mentirosa... Se que esto no es amor, y me voy a acostumbrar.", "terminalMsg1", 100, () => {
-                    setTimeout(() => {
-                        escribirMsgTerminal("Lo que vivimos, lo que fuimos, lo que sentimos... Todo se fue tan rapido como el viento.", "terminalMsg2", 100, null);
-                    }, 500);
-                });
-            }, 1200);
-        }
-
-        function escribirMsgTerminal(mensaje, elementoId, velocidad, callback) {
-            const el = document.getElementById(elementoId);
-            let charIndex = 0;
-            function tipear() {
-                if (charIndex < mensaje.length) {
-                    el.innerHTML += mensaje.charAt(charIndex);
-                    charIndex++;
-                    setTimeout(tipear, velocidad);
-                } else if (callback) {
-                    callback();
-                }
-            }
-            tipear();
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
