@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de Entrada</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Capa de Fotografía Dinámica de fondo -->
+    <div id="bgImage" class="bg-image"></div>
+    
+    <!-- Lienzo para el corazón interactivo -->
+    <canvas id="mapCanvas"></canvas>
+    
+    <!-- Filtro oscuro estilo Dark -->
+    <div class="vignette"></div>
+
+    <!-- UI: Capa de Fecha / Línea de Tiempo -->
+    <div id="dateMarker" class="date-marker hidden"></div>
+
+  <!-- Filtro oscuro estilo Dark -->
+    <div class="vignette"></div>
+
+    <!-- NUEVO: Contenedor para "Está escribiendo..." -->
+    <div id="typingContainer" class="typing-container"></div>
+
+    <!-- Galería de Recuerdos (Imágenes centradas y pequeñas) -->
+    <div id="memoryGallery" class="memory-gallery"></div>
+    <!-- NUEVO: Galería de Recuerdos (Imágenes centradas y pequeñas) -->
+    <div id="memoryGallery" class="memory-gallery"></div>
+
+    <!-- UI: Capa de Fecha / Línea de Tiempo -->
+    <div id="dateMarker" class="date-marker hidden"></div>
+
+    <!-- UI: Capa Narrativa -->
+    <div id="narrativeUI" class="narrative-container hidden">
+        <p id="narrativeText" class="narrative-text"></p>
+    </div>
+    <!-- UI: Capa Narrativa -->
+    <div id="narrativeUI" class="narrative-container hidden">
+        <p id="narrativeText" class="narrative-text"></p>
+    </div>
+
+    <!-- UI: Primer Click (Estilo RPG - Genshin) -->
+    <div id="introUI" class="ui-container hidden">
+        <div class="gs-request-box">
+            <div id="gsProgressBar" class="gs-progress"></div>
+            
+            <div class="gs-content">
+                <div class="gs-avatar">
+                    <img src="avatar.png" alt="Mataz Avatar"> 
+                </div>
+                <div class="gs-info">
+                    <div class="gs-title">
+                        Solicitud para entrar al Mundo (<span id="gsTimerText">10</span>s)
+                    </div>
+                    <div class="gs-player">
+                        <svg class="gs-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        Mataz
+                    </div>
+                </div>
+                <button id="btnAcceptIntro" class="gs-btn">Y</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- UI: Segundo Click (Final - Espejo de la solicitud) -->
+    <div id="outroUI" class="ui-container hidden">
+        <div class="gs-request-box final-request-box">
+            <div class="gs-content final-content">
+                <div class="gs-avatar final-avatar">
+                    <img src="avatar2.png" alt="Matias Avatar"> 
+                </div>
+                <div class="gs-info final-info">
+                    <div id="finalMsg" class="final-msg-text">¿Estás?</div>
+                    <div class="gs-player final-player">
+                        <svg class="gs-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        Matias • Argentina — Costa Rica (+5.700 km)
+                    </div>
+                </div>
+                <div id="finalButtons" class="dual-btn hidden">
+                    <button id="btnAcceptOutro" class="gs-btn btn-yes">SÍ</button>
+                    <button id="btnCloseOutro" class="gs-btn btn-no">NO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
